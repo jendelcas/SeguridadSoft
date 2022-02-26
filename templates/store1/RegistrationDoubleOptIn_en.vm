@@ -1,0 +1,79 @@
+Verify Email
+<html>
+	<head>
+		<title>Verify Email</title>
+		<style type="text/css">
+			.font {font-family: Arial, Helvetica, Sans-Serif;}
+			.title{font-size: 160%;}
+			.dataCell { font-family: Arial, Helvetica, Sans-Serif; background-color: #E1E7F7 }
+		</style>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<table border="0" width="100%" class="font">
+			<tr>
+				<td class="title">
+					<a href="http://www.konakart.com">
+						#if (${KonaKartVersion} && ${imageBaseUrl})
+							<img src="${imageBaseUrl}/logo.png" border="0" alt="KonaKart v${KonaKartVersion}"/>
+						#elseif (${imageBaseUrl})
+							<img src="${imageBaseUrl}/logo.png" border="0" alt="KonaKart"/>
+						#elseif (${KonaKartVersion})
+							<img src="http://www.konakart.com/images/logo.png" border="0" alt="KonaKart v${KonaKartVersion}"/>
+						#else
+							<img src="http://www.konakart.com/images/logo.png" border="0" alt="KonaKart"/>
+						#end
+					</a>
+				</td>
+				<td class="title">
+					 Welcome to KonaKart
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					Dear $customer.getFirstName() $customer.getLastName(),
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td width="100%" colspan="2">
+				    Welcome to KonaKart. In order to verify your email and complete your registration please click <a href="$linkURL">HERE</a>.
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					Best regards,
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					&nbsp;&nbsp;$storeOwner
+				</td>
+			</tr>
+			<tr>
+				<td width="100%"  colspan="2">
+					&nbsp;&nbsp;$storeName
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

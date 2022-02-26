@@ -1,0 +1,152 @@
+<project name="Mago" default="mago_setup" basedir=".">
+
+	<available file="${custom_mago_sql}" property="custom_mago_sql.present" />
+	
+	<target name="mago_debugenv" description="Debug the Mago Set-up environment">
+		<antcall target="kktimestamp">
+			<param name="message" value="Mago Set-up" />
+		</antcall>
+		<echo message="custom_mago_sql                     = ${custom_mago_sql}" />
+		<echo message="custom_mago_sql.present             = ${custom_mago_sql.present}" />
+		<echo message="DBSQLDir                            = ${DBSQLDir}" />
+	</target>
+
+	<target name="reset_database" 
+	 description="Removes the default KonaKart database set-up" >
+
+		<echo message="Removes the default KonaKart database set-up" />
+		<java classname="com.konakartadmin.utils.ResetDatabase"
+		      fork="true"
+		      failonerror="true"
+		      maxmemory="128m"
+		      output="${custom.home}/../logs/ResetDatabase.log"
+		      timeout="20000">
+			<arg value="-di" />
+			<arg value="true" />
+			<arg value="-o" />
+			<arg value="${custom.home}/../logs/ResetDatabase2.log" />
+			<classpath refid="kkadmin.run.path" />
+		</java>
+	</target>
+
+	<target name="load_mago_sql" 
+	        description="Load the Mago SQL commands">
+
+		<echo message="Execute the SQL commands in mago.sql" />
+
+		<java classname="com.konakartadmin.db.ExecuteSQL"
+		      fork="true"
+		      maxmemory="256m">
+			<arg value="-i" />
+			<arg value="${custom.home}/../database/${DBSQLDir}/mago.sql" />
+			<arg value="-p" />
+			<arg value="${konakartadmin.classes.dir}/konakartadmin.properties" />
+			<arg value="-s" />
+			<arg value="store1" />
+			<arg value="-e" />
+			<arg value="UTF-8" />
+			<arg value="-d" />
+			<jvmarg value="-Xmx256M" />
+			<classpath refid="kkadmin.run.path" />
+		</java>
+	</target>
+
+	<target name="load_custom_mago_sql" 
+	        description="Load the Custom Mago SQL commands" if="custom_mago_sql.present">
+
+		<echo message="Execute the Custom SQL commands in ${custom_mago_sql}" />
+
+		<java classname="com.konakartadmin.db.ExecuteSQL"
+		      fork="true"
+		      maxmemory="256m">
+			<arg value="-i" />
+			<arg value="${custom_mago_sql}" />
+			<arg value="-p" />
+			<arg value="${konakartadmin.classes.dir}/konakartadmin.properties" />
+			<arg value="-s" />
+			<arg value="store1" />
+			<arg value="-e" />
+			<arg value="UTF-8" />
+			<arg value="-d" />
+			<jvmarg value="-Xmx256M" />
+			<classpath refid="kkadmin.run.path" />
+		</java>
+	</target>
+	
+	<target name="create_konakartadmin2" 
+	        description="Create the konakartadmin2 webapp">
+
+		<echo message="Create the konakartadmin2 webapp" />
+		<copy todir="${custom.home}/../webapps/konakartadmin2">
+			<fileset dir="${custom.home}/../webapps/konakartadmin">
+				<exclude name="*.css" />
+				<exclude name="*.jpg" />
+				<exclude name="*.js" />
+				<exclude name="*.gif" />
+				<exclude name="*.html" />
+				<exclude name="*.png" />
+				<exclude name="*.rpc" />
+				<exclude name="*.txt" />
+				<exclude name="ckeditor" />
+				<exclude name="ckeditor/**" />
+			</fileset>
+		</copy>
+
+		<echo message="Configure the new konakartadmin2 webapp - don't send MQ messages" />
+		<replace file="${custom.home}/../webapps/konakartadmin2/WEB-INF/classes/konakartadmin.properties"
+		         token="#konakart.mq.send.messages = false"
+		         value="konakart.mq.send.messages = false" />
+
+		<echo message="Cripple the new konakartadmin2 Admin Console" />
+		<echo message="Fix konakartadmin2 web.xml to disable the KKAdmin Console Service" />
+		<CommentInXml file="${custom.home}/../webapps/konakartadmin2/WEB-INF/web.xml"
+		         sectionName="KKAdmin Console Service"/>
+
+		<echo message="Fix konakartadmin2 web.xml to disable the KKAdmin Console Mapping" />
+		<CommentInXml file="${custom.home}/../webapps/konakartadmin2/WEB-INF/web.xml"
+		         sectionName="KKAdmin Console Mapping"/>
+ 
+		<echo message="Fix konakartadmin2 web.xml to disable Quartz" />
+		<CommentInXml file="${custom.home}/../webapps/konakartadmin2/WEB-INF/web.xml"
+		         sectionName="Quartz Scheduler"/>
+				 
+		<echo message="Fix konakartadmin2 web.xml to set a different name" />
+		<replace file="${custom.home}/../webapps/konakartadmin2/WEB-INF/web.xml"
+		         token="&gt;KonaKart Admin App&lt;"
+		         value="&gt;KonaKart Admin 2 No Console&lt;" />
+				 
+		<echo message="Fix konakartadmin konakart_jobs.xml to schedule ProcessFuturePrices" />
+		<replace file="${custom.home}/../webapps/konakartadmin/WEB-INF/classes/konakart_jobs.xml"
+		         token="0 18 0 25 12 ? 2090"
+		         value="0 0 1 * * ? *" />
+		
+		<echo message="Fix konakartadmin konakart_jobs.xml to schedule DeleteTemporaryData" />
+		<replace file="${custom.home}/../webapps/konakartadmin/WEB-INF/classes/konakart_jobs.xml"
+		         token="0 4 0 25 12 ? 2090"
+		         value="0 0 2 * * ? *" />
+
+		<echo message="Set Mago Admin Password in konakartadmin konakart_jobs.properties" />
+		<replace file="${custom.home}/../webapps/konakartadmin/WEB-INF/classes/konakart_jobs.properties"
+		         token="= princess"
+		         value="= Princess-2" />
+		
+		<echo message="Redirect browser visitors to the KKAdmin Console Service webapp" />
+		<copy file="${custom.home}/../webapps/ROOT/redirect.html"
+		      tofile="${custom.home}/../webapps/konakartadmin2/KonakartAdmin.html"
+		      overwrite="true" />
+		<replace file="${custom.home}/../webapps/konakartadmin2/KonakartAdmin.html"
+		         token="konakart"
+		         value="../konakartadmin" />
+	</target>
+
+	<target name="mago_setup"
+	        description="Sets up the Integration with Mago"
+	        depends="
+			debugenv,
+			mago_debugenv,
+			reset_database,
+			load_mago_sql,
+			load_custom_mago_sql,
+			create_konakartadmin2
+		" />
+</project>

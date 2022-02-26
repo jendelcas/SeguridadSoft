@@ -1,0 +1,10 @@
+KonaKart V9.4.0.2 (${SVN_REVISION}) built 10:25AM 23-Dec-2021 GMT
+
+http://www.konakart.com/
+
+
+For support please see the forum:
+
+http://www.konakart.com/forum
+
+

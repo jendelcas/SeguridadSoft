@@ -1,0 +1,47 @@
+First Line of the Template is the Email Subject
+<html>
+	<head>
+		<title>A Customer Email Example</title>
+		<style type="text/css">
+			.font {font-family: Arial, Helvetica, Sans-Serif;}
+			.title{font-size: 160%;}
+			.dataCell { font-family: Arial, Helvetica, Sans-Serif; background-color: #E1E7F7 }
+		</style>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<table border="0" width="100%" class="font">
+			<tr>
+				<td class="title">
+					<a href="http://www.konakart.com">
+						#if (${KonaKartVersion} && ${imageBaseUrl})
+							<img src="${imageBaseUrl}/logo.png" border="0" alt="KonaKart v${KonaKartVersion}"/>
+						#elseif (${imageBaseUrl})
+							<img src="${imageBaseUrl}/logo.png" border="0" alt="KonaKart"/>
+						#elseif (${KonaKartVersion})
+							<img src="http://www.konakart.com/images/logo.png" border="0" alt="KonaKart v${KonaKartVersion}"/>
+						#else
+							<img src="http://www.konakart.com/images/logo.png" border="0" alt="KonaKart"/>
+						#end
+					</a>
+				</td>
+				<td class="title">
+					 This is a simple example of a customer email.
+				</td>
+			</tr>
+			<table border="0" width="100%" class="dataCell">
+				<tr>
+					<td width="100%"  colspan="2">
+						Hello $cust.getFirstName() $cust.getLastName() !!
+					</td>
+				</tr>
+				<tr>
+					<td width="100%"  colspan="2">
+						## $obj1 contains the message that may have been added in the Admin Panel
+						$obj1
+					</td>
+				</tr>
+			</table>
+		</table>
+	</body>
+</html>

@@ -1,0 +1,23 @@
+Notificación de Exception
+<html>
+	<head>
+		<title>Notificación de Exception</title>
+#include("${templateBase}/style.vm")
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+		<table border="0" width="100%">
+			<tr>
+				<td width="100%">
+					<pre><code>$dateTool.get('d-MMM-yyyy HH:mm:ss')</code></pre>
+				</td>
+			</tr>
+			<tr>
+				<td width="100%">
+					<pre><code>$message</code></pre>
+				</td>
+			</tr>
+		</table>
+	</body> 
+</html> 
+
