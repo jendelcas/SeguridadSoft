@@ -3,5 +3,5 @@ projectKey=jendelcas_SeguridadSoft
 serverUrl=https://sonarcloud.io
 serverVersion=8.0.0.27074
 dashboardUrl=https://sonarcloud.io/dashboard?id=jendelcas_SeguridadSoft
-ceTaskId=AX83VxZm_QtqK2jDzt87
-ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AX83VxZm_QtqK2jDzt87
+ceTaskId=AX83XBJm_QtqK2jDzt9P
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AX83XBJm_QtqK2jDzt9P
